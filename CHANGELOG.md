@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `widgets.BitmapImage`, a bitmap widget that embeds a real image in
+  the cell layout and renders SIXEL on capable terminals, falling back to the
+  character-cell `Image` renderer otherwise
+- Added the `sixel` package: dependency-free SIXEL encoder, aspect-correct
+  area-average scaling, transparent-pixel handling and terminal capability
+  detection (`TERMUI_SIXEL`, optional Device Attributes probe)
+- Added a diffing graphics layer behind `Render`: only changed bitmap frames
+  are re-emitted, so per-second refreshes stay flicker-free; rendering without
+  graphic widgets keeps the original cell-only behavior unchanged
+
 ## [3.1.0] - 2019-07-15
 
 ### Added

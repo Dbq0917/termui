@@ -65,6 +65,7 @@ func main() {
 ## Widgets
 
 - [BarChart](./_examples/barchart.go)
+- [BitmapImage](./_examples/bitmap_image.go) (SIXEL bitmap with automatic character-mode fallback)
 - [Canvas](./_examples/canvas.go) (for drawing braille dots)
 - [Gauge](./_examples/gauge.go)
 - [Image](./_examples/image.go)
@@ -77,6 +78,29 @@ func main() {
 - [StackedBarChart](./_examples/stacked_barchart.go)
 - [Table](./_examples/table.go)
 - [Tabs](./_examples/tabs.go)
+
+## SIXEL bitmaps
+
+`widgets.BitmapImage` embeds a real bitmap in the cell-based layout. It
+behaves like every other `Drawable`: its width and position come from its
+cell rectangle, so grids and neighboring widgets (including status color
+blocks) keep their alignment and are never overwritten.
+
+- On a SIXEL-capable terminal the frame is encoded as a DCS/SIXEL sequence
+  written after the normal cell flush; images are aspect-scaled (never
+  stretched) and transparent pixels are skipped instead of painted black.
+- On any other terminal it renders through the existing character-cell
+  `Image` widget. No escape sequences are emitted and the cell output is
+  unchanged.
+- Refreshes are diffed per widget. Unchanged frames generate no terminal
+  traffic, so once-per-second updates do not flicker even with several images
+  on one panel.
+
+Capability detection is conservative and fails closed. Force the decision on
+locked-down terminals with `TERMUI_SIXEL=1` (or `=0` to force character mode),
+and optionally declare the cell pixel size with `TERMUI_CELL_SIZE=8x16` so
+scaling follows the terminal resolution. Enable `sixel.EnableDAProbe` to query
+the terminal directly when no environment variable is authoritative.
 
 Run an example with `go run _examples/{example}.go` or run each example consecutively with `make run-examples`.
 

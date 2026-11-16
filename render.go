@@ -35,4 +35,8 @@ func Render(items ...Drawable) {
 		}
 	}
 	tb.Flush()
+	// Bitmaps are flushed after the cell buffer and diffed internally, so
+	// per-second refreshes never trigger a full-screen cell redraw. Render
+	// returns immediately without side effects when no item implements Graphic.
+	graphics.render(items)
 }
